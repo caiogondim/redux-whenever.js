@@ -1,5 +1,4 @@
 // TODO
-// - remove listener
 // - deep-equal library
 
 const logger = require('logdown')({ prefix: 'redux-whenever' })
@@ -39,11 +38,14 @@ const enhancer = (createStore) => {
     const store = createStore(reducer, preloadedState)
 
     store.whenever = (selector, assertion, callback) => {
-      listeners.push({
+      const length = listeners.push({
         selector,
         assertion,
         callback
       })
+      const index = length - 1
+
+      return () => listeners.splice(index, 1)
     }
 
     store.subscribe(() => {

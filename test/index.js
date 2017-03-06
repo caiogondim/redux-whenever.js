@@ -86,8 +86,22 @@ it('should not fire callback when store changes but observed node maintains desi
   expect(wheneverCallbackSpy.callCount).toBe(1)
 })
 
-it.skip('should play well with other enhancers', () => {
+it('should return a function to unsubscribe listener', () => {
+  const store = redux.createStore(reducer, reduxWhenever)
+  const wheneverCallbackSpy = createSpy()
 
+  const unsubscribe = store.whenever('foo.bar', true, wheneverCallbackSpy)
+
+  store.dispatch({ type: 'LOREM', payload: {
+    foo: { bar: true }
+  }})
+  expect(wheneverCallbackSpy.callCount).toBe(1)
+
+  unsubscribe()
+  store.dispatch({ type: 'LOREM', payload: {
+    foo: { bar: true }
+  }})
+  expect(wheneverCallbackSpy.callCount).toBe(1)
 })
 
 describe('selector', () => {
