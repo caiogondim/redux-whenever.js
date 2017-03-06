@@ -17,6 +17,20 @@ const getStateSubtree = (state, selector) => {
   }
 }
 
+const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
+  if (curStateSubtree === prevStateSubtree) return false
+
+  if (typeof assertion === 'function') {
+    return Boolean(assertion(curStateSubtree))
+  } else {
+    return curStateSubtree === assertion
+  }
+}
+
+//
+// API
+//
+
 const enhancer = (createStore) => {
   let prevState;
   let listeners = []
@@ -36,14 +50,13 @@ const enhancer = (createStore) => {
       const curState = store.getState()
 
       listeners.forEach(listener => {
-        const curStateNode = getStateSubtree(curState, listener.selector)
-        const prevStateNode = getStateSubtree(prevState, listener.selector)
+        const curStateSubtree = getStateSubtree(curState, listener.selector)
+        const prevStateSubtree = getStateSubtree(prevState, listener.selector)
 
-        if (
-          curStateNode !== prevStateNode &&
-          curStateNode === listener.assertion
-        ) {
-          listener.callback(curStateNode, prevStateNode)
+        if (conditionsAreMet(listener.assertion, curStateSubtree, prevStateSubtree)) {
+          // logger.log('conditions met. executing callback.')
+          listener.callback(curStateSubtree, prevStateSubtree)
+          // logger.log('callback executed.')
         }
       })
 

@@ -22,7 +22,6 @@ const createSpy = () => {
 
 it('should fire callback when observed node changes to desired value', () => {
   const store = redux.createStore(reducer, reduxWhenever)
-
   const subscribeCallbackSpy = createSpy()
   const wheneverCallbackSpy = createSpy()
 
@@ -45,7 +44,6 @@ it('should fire callback when observed node changes to desired value', () => {
 
 it('should not fire callback when store changes but observed node dont', () => {
   const store = redux.createStore(reducer, reduxWhenever)
-
   const subscribeCallbackSpy = createSpy()
   const wheneverCallbackSpy = createSpy()
 
@@ -65,7 +63,6 @@ it('should not fire callback when store changes but observed node dont', () => {
 
 it('should not fire callback when store changes but observed node maintains desired value', () => {
   const store = redux.createStore(reducer, reduxWhenever)
-
   const subscribeCallbackSpy = createSpy()
   const wheneverCallbackSpy = createSpy()
 
@@ -96,7 +93,6 @@ it.skip('should play well with other enhancers', () => {
 describe('selector', () => {
   it('should query state if is a string', () => {
     const store = redux.createStore(reducer, reduxWhenever)
-
     const wheneverCallbackSpy = createSpy()
 
     store.whenever('foo.bar', true, wheneverCallbackSpy)
@@ -110,7 +106,6 @@ describe('selector', () => {
 
   it('should run selector if is a function', () => {
     const store = redux.createStore(reducer, reduxWhenever)
-
     const wheneverCallbackSpy = createSpy()
     const selector = (state) => state.foo.bar
 
@@ -125,7 +120,6 @@ describe('selector', () => {
 
   it('should throw an error if not a string or function', () => {
     const store = redux.createStore(reducer, reduxWhenever)
-
     const wheneverCallbackSpy = createSpy()
     const selector = {}
 
@@ -138,6 +132,47 @@ describe('selector', () => {
     } catch (error) {
       expect(error.constructor).toBe(TypeError)
     }
+  })
+})
 
+describe('assertion', () => {
+  it('should not fire callback if assertion is a function and returns false', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+    const wheneverCallbackSpy = createSpy()
+    const assertion = () => false
+
+    store.whenever('foo.bar', assertion, wheneverCallbackSpy)
+
+    store.dispatch({ type: 'LOREM', payload: {
+      foo: { bar: true }
+    }})
+    expect(wheneverCallbackSpy.callCount).toBe(0)
+  })
+
+  it('should fire callback if assertion is a function and returns true', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+    const wheneverCallbackSpy = createSpy()
+    const assertion = () => true
+
+    store.whenever('foo.bar', assertion, wheneverCallbackSpy)
+
+    store.dispatch({ type: 'LOREM', payload: {
+      foo: { bar: true }
+    }})
+    expect(wheneverCallbackSpy.callCount).toBe(1)
+  })
+
+  it('should receive a state subtree as argument', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+    const wheneverCallbackSpy = createSpy()
+    const assertion = (state) => {
+      expect(state).toEqual({ bar: true })
+    }
+
+    store.whenever('foo', assertion, wheneverCallbackSpy)
+
+    store.dispatch({ type: 'LOREM', payload: {
+      foo: { bar: true }
+    }})
   })
 })
