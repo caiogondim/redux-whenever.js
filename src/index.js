@@ -5,6 +5,18 @@
 const logger = require('logdown')({ prefix: 'redux-whenever' })
 const safeChain = require('@caiogondim/safe-chain')
 
+const getStateSubtree = (state, selector) => {
+  if (state === undefined) {
+      return undefined
+  } if (typeof selector === 'string') {
+    return safeChain(state, selector)
+  } else if (typeof selector === 'function') {
+    return selector(state)
+  } else {
+    throw new TypeError('selector must be a string or function')
+  }
+}
+
 const enhancer = (createStore) => {
   let prevState;
   let listeners = []
@@ -24,8 +36,8 @@ const enhancer = (createStore) => {
       const curState = store.getState()
 
       listeners.forEach(listener => {
-        const curStateNode = safeChain(curState, listener.selector)
-        const prevStateNode = safeChain(prevState, listener.selector)
+        const curStateNode = getStateSubtree(curState, listener.selector)
+        const prevStateNode = getStateSubtree(prevState, listener.selector)
 
         if (
           curStateNode !== prevStateNode &&

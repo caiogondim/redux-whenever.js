@@ -92,3 +92,52 @@ it('should not fire callback when store changes but observed node maintains desi
 it.skip('should play well with other enhancers', () => {
 
 })
+
+describe('selector', () => {
+  it('should query state if is a string', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+
+    const wheneverCallbackSpy = createSpy()
+
+    store.whenever('foo.bar', true, wheneverCallbackSpy)
+
+    store.dispatch({ type: 'LOREM', payload: {
+      foo: { bar: true }
+    }})
+
+    expect(wheneverCallbackSpy.callCount).toBe(1)
+  })
+
+  it('should run selector if is a function', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+
+    const wheneverCallbackSpy = createSpy()
+    const selector = (state) => state.foo.bar
+
+    store.whenever(selector, true, wheneverCallbackSpy)
+
+    store.dispatch({ type: 'LOREM', payload: {
+      foo: { bar: true }
+    }})
+
+    expect(wheneverCallbackSpy.callCount).toBe(1)
+  })
+
+  it('should throw an error if not a string or function', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+
+    const wheneverCallbackSpy = createSpy()
+    const selector = {}
+
+    store.whenever(selector, true, wheneverCallbackSpy)
+
+    try {
+      store.dispatch({ type: 'LOREM', payload: {
+        foo: { bar: true }
+      }})
+    } catch (error) {
+      expect(error.constructor).toBe(TypeError)
+    }
+
+  })
+})
