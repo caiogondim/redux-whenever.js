@@ -4,7 +4,7 @@
   "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,12 @@
   "dependencies": {
     "logdown": "^2.0.3",
     "safe-chain": "^2.0.1"
+  },
+  "jest": {
+    "roots": [
+      "test/"
+    ],
+    "testRegex": "test/.*\\.js$",
+    "collectCoverage": true
   }
 }
