@@ -16,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/caiogondim/redux-whenever.js/issues"
   },
-  "homepage": "https://github.com/caiogondim/redux-whenever.js#readme"
+  "homepage": "https://github.com/caiogondim/redux-whenever.js#readme",
+  "devDependencies": {
+    "jest": "^19.0.2",
+    "redux": "^3.6.0",
+    "standard": "^9.0.0"
+  },
+  "dependencies": {
+    "logdown": "^2.0.3",
+    "safe-chain": "^2.0.1"
+  }
 }
