@@ -2,10 +2,15 @@
   "name": "redux-whenever.js",
   "version": "1.0.0",
   "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
-  "main": "index.js",
+  "main": "src/index.js",
+  "files": [
+    "src/",
+    "test/"
+  ],
   "scripts": {
     "test": "jest && standard",
-    "test:lint": "standard"
+    "test:lint": "standard",
+    "preversion": "npm run test"
   },
   "repository": {
     "type": "git",
