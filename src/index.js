@@ -1,7 +1,3 @@
-// TODO
-// - update logdown
-
-// const logger = require('logdown')({ prefix: 'redux-whenever' })
 const isEqual = require('is-equal')
 const safeChain = require('@caiogondim/safe-chain')
 
@@ -57,9 +53,7 @@ const enhancer = (createStore) => {
         const prevStateSubtree = getStateSubtree(prevState, listener.selector)
 
         if (conditionsAreMet(listener.assertion, curStateSubtree, prevStateSubtree)) {
-          // logger.log('conditions met. executing callback.')
           listener.callback(curStateSubtree, prevStateSubtree)
-          // logger.log('callback executed.')
         }
       })
 
