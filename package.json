@@ -1,5 +1,5 @@
 {
-  "name": "redux-whenever.js",
+  "name": "@caiogondim/redux-whenever",
   "version": "1.0.0",
   "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
   "main": "src/index.js",
