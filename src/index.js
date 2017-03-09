@@ -1,12 +1,13 @@
 // TODO
 // - deep-equal library
+// - update logdown
 
-const logger = require('logdown')({ prefix: 'redux-whenever' })
+// const logger = require('logdown')({ prefix: 'redux-whenever' })
 const safeChain = require('@caiogondim/safe-chain')
 
 const getStateSubtree = (state, selector) => {
   if (state === undefined) {
-      return undefined
+    return undefined
   } if (typeof selector === 'string') {
     return safeChain(state, selector)
   } else if (typeof selector === 'function') {
@@ -31,7 +32,7 @@ const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
 //
 
 const enhancer = (createStore) => {
-  let prevState;
+  let prevState
   let listeners = []
 
   return (reducer, preloadedState) => {

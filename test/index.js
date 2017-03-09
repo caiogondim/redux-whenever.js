@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 const redux = require('redux')
 const reduxWhenever = require('../src')
 
@@ -10,7 +12,7 @@ const reducer = (state = {}, action) => {
 }
 
 const createSpy = () => {
-  const spy = () => spy.callCount += 1
+  const spy = () => (spy.callCount += 1)
   spy.callCount = 0
 
   return spy
@@ -28,15 +30,24 @@ it('should fire callback when observed node changes to desired value', () => {
   store.subscribe(subscribeCallbackSpy)
   store.whenever('foo.bar', true, wheneverCallbackSpy)
 
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: 1 }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: 2 }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: true }
-  }})
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: 1 }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: 2 }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: true }
+    }
+  })
 
   expect(subscribeCallbackSpy.callCount).toBe(3)
   expect(wheneverCallbackSpy.callCount).toBe(1)
@@ -50,12 +61,18 @@ it('should not fire callback when store changes but observed node dont', () => {
   store.subscribe(subscribeCallbackSpy)
   store.whenever('foo.bar', true, wheneverCallbackSpy)
 
-  store.dispatch({ type: 'LOREM', payload: {
-    lorem: { ipsum: 1 }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    lorem: { ipsum: 2 }
-  }})
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      lorem: { ipsum: 1 }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      lorem: { ipsum: 2 }
+    }
+  })
 
   expect(subscribeCallbackSpy.callCount).toBe(2)
   expect(wheneverCallbackSpy.callCount).toBe(0)
@@ -69,18 +86,30 @@ it('should not fire callback when store changes but observed node maintains desi
   store.subscribe(subscribeCallbackSpy)
   store.whenever('foo.bar', true, wheneverCallbackSpy)
 
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: 1 }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: true }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: true }
-  }})
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: 2 }
-  }})
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: 1 }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: true }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: true }
+    }
+  })
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: 2 }
+    }
+  })
 
   expect(subscribeCallbackSpy.callCount).toBe(4)
   expect(wheneverCallbackSpy.callCount).toBe(1)
@@ -92,15 +121,21 @@ it('should return a function to unsubscribe listener', () => {
 
   const unsubscribe = store.whenever('foo.bar', true, wheneverCallbackSpy)
 
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: true }
-  }})
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: true }
+    }
+  })
   expect(wheneverCallbackSpy.callCount).toBe(1)
 
   unsubscribe()
-  store.dispatch({ type: 'LOREM', payload: {
-    foo: { bar: true }
-  }})
+  store.dispatch({
+    type: 'LOREM',
+    payload: {
+      foo: { bar: true }
+    }
+  })
   expect(wheneverCallbackSpy.callCount).toBe(1)
 })
 
@@ -111,9 +146,12 @@ describe('selector', () => {
 
     store.whenever('foo.bar', true, wheneverCallbackSpy)
 
-    store.dispatch({ type: 'LOREM', payload: {
-      foo: { bar: true }
-    }})
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: true }
+      }
+    })
 
     expect(wheneverCallbackSpy.callCount).toBe(1)
   })
@@ -125,9 +163,12 @@ describe('selector', () => {
 
     store.whenever(selector, true, wheneverCallbackSpy)
 
-    store.dispatch({ type: 'LOREM', payload: {
-      foo: { bar: true }
-    }})
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: true }
+      }
+    })
 
     expect(wheneverCallbackSpy.callCount).toBe(1)
   })
@@ -140,9 +181,12 @@ describe('selector', () => {
     store.whenever(selector, true, wheneverCallbackSpy)
 
     try {
-      store.dispatch({ type: 'LOREM', payload: {
-        foo: { bar: true }
-      }})
+      store.dispatch({
+        type: 'LOREM',
+        payload: {
+          foo: { bar: true }
+        }
+      })
     } catch (error) {
       expect(error.constructor).toBe(TypeError)
     }
@@ -157,9 +201,12 @@ describe('assertion', () => {
 
     store.whenever('foo.bar', assertion, wheneverCallbackSpy)
 
-    store.dispatch({ type: 'LOREM', payload: {
-      foo: { bar: true }
-    }})
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: true }
+      }
+    })
     expect(wheneverCallbackSpy.callCount).toBe(0)
   })
 
@@ -170,9 +217,12 @@ describe('assertion', () => {
 
     store.whenever('foo.bar', assertion, wheneverCallbackSpy)
 
-    store.dispatch({ type: 'LOREM', payload: {
-      foo: { bar: true }
-    }})
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: true }
+      }
+    })
     expect(wheneverCallbackSpy.callCount).toBe(1)
   })
 
@@ -185,8 +235,11 @@ describe('assertion', () => {
 
     store.whenever('foo', assertion, wheneverCallbackSpy)
 
-    store.dispatch({ type: 'LOREM', payload: {
-      foo: { bar: true }
-    }})
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: true }
+      }
+    })
   })
 })

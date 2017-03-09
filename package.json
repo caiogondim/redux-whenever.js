@@ -4,7 +4,8 @@
   "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest && standard",
+    "test:lint": "standard"
   },
   "repository": {
     "type": "git",
