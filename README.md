@@ -23,8 +23,6 @@ const redux = require('redux')
 const store = redux.createStore(reducer, reduxWhenever)
 
 // Callback receives current and previous state subtree (or leaf).
-// You might not be interested in the state at all, since the callback will only be executed if
-// the given assertion is true.
 const callback = (curStateSubtree, prevStateSubtree) => {
   // ...
 }
