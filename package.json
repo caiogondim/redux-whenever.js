@@ -1,6 +1,6 @@
 {
   "name": "@caiogondim/redux-whenever",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
   "main": "src/index.js",
   "files": [
