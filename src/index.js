@@ -1,8 +1,8 @@
 // TODO
-// - deep-equal library
 // - update logdown
 
 // const logger = require('logdown')({ prefix: 'redux-whenever' })
+const isEqual = require('is-equal')
 const safeChain = require('@caiogondim/safe-chain')
 
 const getStateSubtree = (state, selector) => {
@@ -23,7 +23,7 @@ const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
   if (typeof assertion === 'function') {
     return Boolean(assertion(curStateSubtree))
   } else {
-    return curStateSubtree === assertion
+    return isEqual(curStateSubtree, assertion)
   }
 }
 

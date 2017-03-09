@@ -24,6 +24,7 @@
     "standard": "^9.0.0"
   },
   "dependencies": {
+    "is-equal": "^1.5.5",
     "logdown": "^2.0.3",
     "safe-chain": "^2.0.1"
   },
