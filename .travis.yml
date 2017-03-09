@@ -13,5 +13,6 @@ install:
   - npm i -g npm@latest
   - npm install
 
-after_success:
-  - ./node_modules/.bin/codecov
+addons:
+  code_climate:
+    repo_token: 070a6c56b4a8bf7ff5198ed8f0edfd2944fe773058f2ef3f581c08f3d1220ef0
