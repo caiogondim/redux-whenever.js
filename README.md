@@ -1,4 +1,4 @@
-<img src="./img/banner.png">
+<img src="https://github.com/caiogondim/redux-whenever.js/blob/master/img/banner.png">
 
 <h1 align="center">redux-whenever.js</h1>
 
