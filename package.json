@@ -1,7 +1,7 @@
 {
   "name": "@caiogondim/redux-whenever",
   "version": "1.0.5",
-  "description": "- Reference: https://github.com/ivantsov/redux-subscriber",
+  "description": "Fires a callback whenever a store subtree turns to a desired value",
   "main": "src/index.js",
   "files": [
     "src/",
