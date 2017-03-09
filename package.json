@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/caiogondim/redux-whenever.js#readme",
   "devDependencies": {
+    "codecov": "^1.0.1",
     "jest": "^19.0.2",
     "redux": "^3.6.0",
     "standard": "^9.0.0"
