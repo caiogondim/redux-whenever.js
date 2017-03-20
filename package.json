@@ -8,8 +8,8 @@
     "test/"
   ],
   "scripts": {
-    "test": "jest && standard",
-    "test:lint": "standard",
+    "test": "jest && npm run test:lint",
+    "test:lint": "standard 'src/' 'test/'",
     "preversion": "npm run test",
     "build": "browserify -t [ babelify --global --presets [ es2015 ] ] src/index.js > dist/redux-whenever.js && uglifyjs dist/redux-whenever.js --compress > dist/redux-whenever.min.js"
   },
