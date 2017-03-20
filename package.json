@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "is-equal": "^1.5.5",
-    "logdown": "^2.0.3",
     "@caiogondim/safe-chain": "^2.0.1"
   },
   "jest": {
