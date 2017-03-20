@@ -1,6 +1,6 @@
 {
   "name": "@caiogondim/redux-whenever",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Fires a callback whenever a store subtree turns to a desired value",
   "main": "src/index.js",
   "files": [
