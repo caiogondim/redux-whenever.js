@@ -3,7 +3,7 @@
 <h1 align="center">redux-whenever.js</h1>
 
 <div align="center">
-<img src="http://travis-ci.org/caiogondim/redux-whenever.js.svg?branch=master" alt="Travis CI"> <img src="https://codecov.io/gh/caiogondim/redux-whenever.js/branch/master/graph/badge.svg" alt="Codecov"> <img src="http://img.badgesize.io/caiogondim/redux-whenever.js/master/src/index.js?compression=gzip">
+<img src="http://travis-ci.org/caiogondim/redux-whenever.js.svg?branch=master" alt="Travis CI"> <img src="https://codecov.io/gh/caiogondim/redux-whenever.js/branch/master/graph/badge.svg" alt="Codecov"> <img src="http://img.badgesize.io/caiogondim/redux-whenever.js/master/dist/redux-whenever.min.js?compression=gzip">
 </div>
 
 <br>
