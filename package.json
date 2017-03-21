@@ -35,7 +35,6 @@
     "uglify-js": "^2.8.14"
   },
   "dependencies": {
-    "is-equal": "^1.5.5",
     "@caiogondim/safe-chain": "^2.0.1"
   },
   "jest": {

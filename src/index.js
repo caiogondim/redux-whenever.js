@@ -1,4 +1,3 @@
-const isEqual = require('is-equal')
 const safeChain = require('@caiogondim/safe-chain')
 
 const getStateSubtree = (state, selector) => {
@@ -19,7 +18,7 @@ const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
   if (typeof assertion === 'function') {
     return Boolean(assertion(curStateSubtree))
   } else {
-    return isEqual(curStateSubtree, assertion)
+    return curStateSubtree === assertion
   }
 }
 

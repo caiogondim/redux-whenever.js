@@ -53,37 +53,6 @@ it('should fire callback when observed node changes to desired literal value', (
   expect(wheneverCallbackSpy.callCount).toBe(1)
 })
 
-it('should fire callback when observed node changes to desired non-literal value', () => {
-  const store = redux.createStore(reducer, reduxWhenever)
-  const subscribeCallbackSpy = createSpy()
-  const wheneverCallbackSpy = createSpy()
-
-  store.subscribe(subscribeCallbackSpy)
-  store.whenever('foo', {bar: 2}, wheneverCallbackSpy)
-
-  store.dispatch({
-    type: 'LOREM',
-    payload: {
-      foo: { bar: 1 }
-    }
-  })
-  store.dispatch({
-    type: 'LOREM',
-    payload: {
-      foo: { bar: 2 }
-    }
-  })
-  store.dispatch({
-    type: 'LOREM',
-    payload: {
-      foo: { bar: true }
-    }
-  })
-
-  expect(subscribeCallbackSpy.callCount).toBe(3)
-  expect(wheneverCallbackSpy.callCount).toBe(1)
-})
-
 it('should not fire callback when store changes but observed node dont', () => {
   const store = redux.createStore(reducer, reduxWhenever)
   const subscribeCallbackSpy = createSpy()
