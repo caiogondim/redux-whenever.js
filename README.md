@@ -8,28 +8,24 @@
 
 <br>
 
-Subscribe to a state subtree (or leaf) and run callbacks whenever it evaluates to a given value.
-No need to check for previous and current state anymore 🎉🎉🎉.
+Subscribe to a state subtree (or leaf) and run callbacks `whenever` it evaluates to a given value.
 
 ## Usage
 
 ### Adding subscriber
 
 ```js
-const reduxWhenever = require('@caiogondim/redux-whenever')
+const whenever = require('redux-whenever')
 const redux = require('redux')
 
-// Pass `reduxWhenever` as an enhancer
-const store = redux.createStore(reducer, reduxWhenever)
-
-// Callback receives current and previous state subtree (or leaf).
-const callback = (curStateSubtree, prevStateSubtree) => {
-  // ...
-}
+// Pass `whenever` as an enhancer
+const store = redux.createStore(reducer, whenever)
 
 // Pass the state selector you are interested in as a string.
 // `callback` will execute only when `player.isReady` becames `true`
-store.whenever('player.isReady', true, callback)
+store.whenever('player.isReady', true, (curState, prevState) => {
+  // Your magic here
+})
 ```
 
 ### Removing subscriber
@@ -50,7 +46,8 @@ Should return a piece of the state tree
 
 #### `assertion`
 - type: `String|Number|Object|Function`
-- If a
+
+If a function, it will be executed. If not, it's equality will be compared against current state.
 
 #### `callback`
 - type: `Function`
@@ -58,7 +55,7 @@ Should return a piece of the state tree
 ## Installation
 
 ```
-npm install --save @caiogondim/redux-whenever
+npm install --save redux-whenever
 ```
 
 ## Credits
