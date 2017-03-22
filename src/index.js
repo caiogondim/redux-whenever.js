@@ -1,4 +1,4 @@
-const safeChain = require('@caiogondim/safe-chain')
+const safeChain = require('safe-chain')
 
 const getStateSubtree = (state, selector) => {
   if (state === undefined) {
