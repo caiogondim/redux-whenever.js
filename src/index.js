@@ -30,18 +30,21 @@ const enhancer = (createStore) => {
   return (reducer, preloadedState) => {
     const store = createStore(reducer, preloadedState)
     let prevState = undefined
+    let curState = undefined
+
+    store.subscribe(() => {
+      prevState = curState
+    })
 
     store.whenever = (selector, assertion, callback) => {
       return store.subscribe(() => {
-        const curState = store.getState()
+        curState = store.getState()
         const curStateSubtree = getStateSubtree(curState, selector)
         const prevStateSubtree = getStateSubtree(prevState, selector)
 
         if (conditionsAreMet(assertion, curStateSubtree, prevStateSubtree)) {
           callback(curStateSubtree, prevStateSubtree)
         }
-
-        prevState = curState
       })
     }
 
