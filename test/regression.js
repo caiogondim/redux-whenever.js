@@ -46,4 +46,30 @@ describe('regression', () => {
       }
     })
   })
+
+  it('should update `prevState` when actions are dispatched recursively', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+
+    store.whenever('foo.bar', () => true, (curState, prevState) => {
+      if (curState === 3) {
+        expect(prevState).toBe(2)
+        return;
+      }
+
+      store.dispatch({
+        type: 'LOREM',
+        payload: {
+          foo: { bar: curState + 1 }
+        }
+      })
+    })
+
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: 1 }
+      }
+    })
+  })
+
 })
