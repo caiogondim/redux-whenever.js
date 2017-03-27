@@ -27,37 +27,23 @@ const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
 //
 
 const enhancer = (createStore) => {
-  let prevState
-  let listeners = []
-
   return (reducer, preloadedState) => {
     const store = createStore(reducer, preloadedState)
+    let prevState = undefined
 
     store.whenever = (selector, assertion, callback) => {
-      const length = listeners.push({
-        selector,
-        assertion,
-        callback
-      })
-      const index = length - 1
+      return store.subscribe(() => {
+        const curState = store.getState()
+        const curStateSubtree = getStateSubtree(curState, selector)
+        const prevStateSubtree = getStateSubtree(prevState, selector)
 
-      return () => listeners.splice(index, 1)
-    }
-
-    store.subscribe(() => {
-      const curState = store.getState()
-
-      listeners.forEach(listener => {
-        const curStateSubtree = getStateSubtree(curState, listener.selector)
-        const prevStateSubtree = getStateSubtree(prevState, listener.selector)
-
-        if (conditionsAreMet(listener.assertion, curStateSubtree, prevStateSubtree)) {
-          listener.callback(curStateSubtree, prevStateSubtree)
+        if (conditionsAreMet(assertion, curStateSubtree, prevStateSubtree)) {
+          callback(curStateSubtree, prevStateSubtree)
         }
-      })
 
-      prevState = curState
-    })
+        prevState = curState
+      })
+    }
 
     return store
   }
