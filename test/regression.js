@@ -72,4 +72,40 @@ describe('regression', () => {
     })
   })
 
+  it('should pass states correctly to all subscribers when actions are dispatched recursively', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+
+    store.whenever('foo.bar', () => true, (curState, prevState) => {
+      if (curState === 5) {
+        return;
+      }
+      store.dispatch({
+        type: 'LOREM',
+        payload: {
+          foo: { bar: curState + 1 }
+        }
+      })
+    })
+
+    const callback = jest.fn()
+    store.whenever('foo.bar', () => true, (curState, prevState) => {
+      callback(curState, prevState)
+      if (curState === 5) {
+        expect(callback).toHaveBeenCalledWith(1, undefined)
+        expect(callback).toHaveBeenCalledWith(2,1)
+        expect(callback).toHaveBeenCalledWith(3,2)
+        expect(callback).toHaveBeenCalledWith(4,3)
+        expect(callback).toHaveBeenCalledWith(5,4)
+      }
+    })
+
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: 1 }
+      }
+    })
+
+    expect(callback).toHaveBeenCalledTimes(5)
+  })
 })
