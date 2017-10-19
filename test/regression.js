@@ -76,7 +76,7 @@ describe('regression', () => {
     const store = redux.createStore(reducer, reduxWhenever)
 
     store.whenever('foo.bar', () => true, (curState, prevState) => {
-      if (curState === 3) {
+      if (curState === 5) {
         return;
       }
       store.dispatch({
@@ -90,9 +90,12 @@ describe('regression', () => {
     const callback = jest.fn()
     store.whenever('foo.bar', () => true, (curState, prevState) => {
       callback(curState, prevState)
-      if (curState === 3) {
+      if (curState === 5) {
+        expect(callback).toHaveBeenCalledWith(1, undefined)
         expect(callback).toHaveBeenCalledWith(2,1)
         expect(callback).toHaveBeenCalledWith(3,2)
+        expect(callback).toHaveBeenCalledWith(4,3)
+        expect(callback).toHaveBeenCalledWith(5,4)
       }
     })
 
@@ -102,5 +105,7 @@ describe('regression', () => {
         foo: { bar: 1 }
       }
     })
+
+    expect(callback).toHaveBeenCalledTimes(5)
   })
 })
