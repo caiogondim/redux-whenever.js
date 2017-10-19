@@ -108,4 +108,39 @@ describe('regression', () => {
 
     expect(callback).toHaveBeenCalledTimes(5)
   })
+
+  it('should work when unsubscribing and recursive calls', () => {
+    const store = redux.createStore(reducer, reduxWhenever)
+    const callback1 = jest.fn()
+    const callback2 = jest.fn()
+
+    store.whenever('foo.bar', () => true, (curState, prevState) => {
+      callback1()
+
+      if (curState === 2) {
+        return
+      }
+
+      store.dispatch({
+        type: 'LOREM',
+        payload: {
+          foo: { bar: curState + 1 }
+        }
+      })
+    })
+
+
+    const unsubscribe = store.whenever('foo.bar', () => true, callback2)
+    unsubscribe()
+
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: 1 }
+      }
+    })
+
+    expect(callback1).toHaveBeenCalledTimes(2)
+    expect(callback2).toHaveBeenCalledTimes(0)
+  })
 })
