@@ -11,13 +11,6 @@ const reducer = (state = {}, action) => {
   return Object.assign({}, action.payload)
 }
 
-const createSpy = () => {
-  const spy = () => (spy.callCount += 1)
-  spy.callCount = 0
-
-  return spy
-}
-
 //
 // Tests
 //
@@ -53,7 +46,7 @@ describe('regression', () => {
     store.whenever('foo.bar', () => true, (curState, prevState) => {
       if (curState === 3) {
         expect(prevState).toBe(2)
-        return;
+        return
       }
 
       store.dispatch({
@@ -77,7 +70,7 @@ describe('regression', () => {
 
     store.whenever('foo.bar', () => true, (curState, prevState) => {
       if (curState === 5) {
-        return;
+        return
       }
       store.dispatch({
         type: 'LOREM',
@@ -92,10 +85,10 @@ describe('regression', () => {
       callback(curState, prevState)
       if (curState === 5) {
         expect(callback).toHaveBeenCalledWith(1, undefined)
-        expect(callback).toHaveBeenCalledWith(2,1)
-        expect(callback).toHaveBeenCalledWith(3,2)
-        expect(callback).toHaveBeenCalledWith(4,3)
-        expect(callback).toHaveBeenCalledWith(5,4)
+        expect(callback).toHaveBeenCalledWith(2, 1)
+        expect(callback).toHaveBeenCalledWith(3, 2)
+        expect(callback).toHaveBeenCalledWith(4, 3)
+        expect(callback).toHaveBeenCalledWith(5, 4)
       }
     })
 
@@ -128,7 +121,6 @@ describe('regression', () => {
         }
       })
     })
-
 
     const unsubscribe = store.whenever('foo.bar', () => true, callback2)
     unsubscribe()

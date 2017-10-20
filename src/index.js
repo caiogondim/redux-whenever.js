@@ -29,8 +29,8 @@ const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
 const enhancer = (createStore) => {
   return (reducer, preloadedState) => {
     const store = createStore(reducer, preloadedState)
-    let prevState = undefined
-    let curState = undefined
+    let prevState
+    let curState
 
     store.subscribe(() => {
       prevState = curState
@@ -42,11 +42,10 @@ const enhancer = (createStore) => {
     let recursionLevel = 0
 
     store.whenever = (selector, assertion, callback) => {
-
       const unsubscribe = store.subscribe(() => {
         ++recursionLevel
 
-        store.dispatch = function() {
+        store.dispatch = function () {
           postponedActions.push(arguments)
         }
 
@@ -65,7 +64,6 @@ const enhancer = (createStore) => {
       // this is for dispatching the actions
       unsubscribePostprocess && unsubscribePostprocess()
       unsubscribePostprocess = store.subscribe(() => {
-
         // only without recursion should dispatch the actions
         if (recursionLevel !== 0) {
           return
