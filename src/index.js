@@ -37,13 +37,13 @@ const enhancer = (createStore) => {
     })
 
     const originalDispatch = store.dispatch
-    let postponedActions = []
-    let sequence = 0
+    const postponedActions = []
+    let unsubscribePostprocess = null
     let recursionLevel = 0
 
     store.whenever = (selector, assertion, callback) => {
-      const id = ++sequence
-      return store.subscribe(() => {
+
+      const unsubscribe = store.subscribe(() => {
         ++recursionLevel
 
         store.dispatch = function() {
@@ -58,18 +58,31 @@ const enhancer = (createStore) => {
           callback(curStateSubtree, prevStateSubtree)
         }
 
-        // Only the last one subscribed without recursion should dispatch the actions
-        if (id === sequence && recursionLevel === 1) {
-          for (let i = 0; i < postponedActions.length; ++i) {
-            originalDispatch.apply(store, postponedActions[i])
-          }
-
-          postponedActions = []
-          store.dispatch = originalDispatch
-        }
-
         --recursionLevel
       })
+
+      // we always keep a subscription at the end.
+      // this is for dispatching the actions
+      unsubscribePostprocess && unsubscribePostprocess()
+      unsubscribePostprocess = store.subscribe(() => {
+
+        // only without recursion should dispatch the actions
+        if (recursionLevel !== 0) {
+          return
+        }
+
+        recursionLevel = undefined
+
+        for (let i = 0; i < postponedActions.length; ++i) {
+          originalDispatch.apply(store, postponedActions[i])
+        }
+
+        postponedActions.length = 0
+        store.dispatch = originalDispatch
+        recursionLevel = 0
+      })
+
+      return unsubscribe
     }
 
     return store
