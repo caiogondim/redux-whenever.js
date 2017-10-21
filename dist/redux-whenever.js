@@ -1,107 +1,90 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
+const safeChain = require('safe-chain')
 
-var safeChain = require('@caiogondim/safe-chain');
-
-var getStateSubtree = function getStateSubtree(state, selector) {
+const getStateSubtree = (state, selector) => {
   if (state === undefined) {
-    return undefined;
-  }if (typeof selector === 'string') {
-    return safeChain(state, selector);
+    return undefined
+  } if (typeof selector === 'string') {
+    return safeChain(state, selector)
   } else if (typeof selector === 'function') {
-    return selector(state);
+    return selector(state)
   } else {
-    throw new TypeError('selector must be a string or function');
+    throw new TypeError('selector must be a string or function')
   }
-};
+}
 
-var conditionsAreMet = function conditionsAreMet(assertion, curStateSubtree, prevStateSubtree) {
-  if (curStateSubtree === prevStateSubtree) return false;
+const conditionsAreMet = (assertion, curStateSubtree, prevStateSubtree) => {
+  if (curStateSubtree === prevStateSubtree) return false
 
   if (typeof assertion === 'function') {
-    return Boolean(assertion(curStateSubtree));
+    return Boolean(assertion(curStateSubtree))
   } else {
-    return curStateSubtree === assertion;
+    return curStateSubtree === assertion
   }
-};
+}
 
 //
 // API
 //
 
-var enhancer = function enhancer(createStore) {
-  var prevState = void 0;
-  var listeners = [];
+const enhancer = (createStore) => {
+  return (reducer, preloadedState) => {
+    const store = createStore(reducer, preloadedState)
+    let prevState
+    let curState
 
-  return function (reducer, preloadedState) {
-    var store = createStore(reducer, preloadedState);
+    store.subscribe(() => {
+      prevState = curState
+    })
 
-    store.whenever = function (selector, assertion, callback) {
-      var length = listeners.push({
-        selector: selector,
-        assertion: assertion,
-        callback: callback
-      });
-      var index = length - 1;
+    const originalDispatch = store.dispatch
+    const postponedActions = []
+    let unsubscribePostprocess = null
+    let recursionLevel = 0
 
-      return function () {
-        return listeners.splice(index, 1);
-      };
-    };
+    store.whenever = (selector, assertion, callback) => {
+      const unsubscribe = store.subscribe(() => {
+        ++recursionLevel
 
-    store.subscribe(function () {
-      var curState = store.getState();
-
-      listeners.forEach(function (listener) {
-        var curStateSubtree = getStateSubtree(curState, listener.selector);
-        var prevStateSubtree = getStateSubtree(prevState, listener.selector);
-
-        if (conditionsAreMet(listener.assertion, curStateSubtree, prevStateSubtree)) {
-          listener.callback(curStateSubtree, prevStateSubtree);
+        store.dispatch = function () {
+          postponedActions.push(arguments)
         }
-      });
 
-      prevState = curState;
-    });
+        curState = store.getState()
+        const curStateSubtree = getStateSubtree(curState, selector)
+        const prevStateSubtree = getStateSubtree(prevState, selector)
 
-    return store;
-  };
-};
+        if (conditionsAreMet(assertion, curStateSubtree, prevStateSubtree)) {
+          callback(curStateSubtree, prevStateSubtree)
+        }
 
-module.exports = enhancer;
+        --recursionLevel
+      })
 
-},{"@caiogondim/safe-chain":2}],2:[function(require,module,exports){
-'use strict';
+      // we always keep a subscription at the end.
+      // this is for dispatching the actions
+      unsubscribePostprocess && unsubscribePostprocess()
+      unsubscribePostprocess = store.subscribe(() => {
+        // only without recursion should dispatch the actions
+        if (recursionLevel !== 0) {
+          return
+        }
 
-var quoteQuery = function quoteQuery(query) {
-  return query.replace(/\[/g, '[\'').replace(/]/g, '\']');
-};
+        recursionLevel = undefined
 
-var queryObj = function queryObj(obj, query) {
-  var prop = void 0;
-  var quotedQuery = quoteQuery(query);
+        for (let i = 0; i < postponedActions.length; ++i) {
+          originalDispatch.apply(store, postponedActions[i])
+        }
 
-  try {
-    if (query[0] === '[') {
-      prop = eval('obj' + quotedQuery); // eslint-disable-line no-eval
-    } else {
-      prop = eval('obj.' + query); // eslint-disable-line no-eval
+        postponedActions.length = 0
+        store.dispatch = originalDispatch
+        recursionLevel = 0
+      })
+
+      return unsubscribe
     }
-  } catch (error) {
-    prop = undefined;
+
+    return store
   }
+}
 
-  return prop;
-};
-
-//
-// API
-//
-
-var safeChain = function safeChain(obj, query) {
-  return queryObj(obj, query);
-};
-
-module.exports = safeChain;
-
-},{}]},{},[1]);
+module.exports = enhancer
