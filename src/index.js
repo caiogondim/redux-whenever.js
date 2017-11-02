@@ -1,9 +1,7 @@
 const safeChain = require('safe-chain')
 
 const getStateSubtree = (state, selector) => {
-  if (state === undefined) {
-    return undefined
-  } if (typeof selector === 'string') {
+  if (typeof selector === 'string') {
     return safeChain(state, selector)
   } else if (typeof selector === 'function') {
     return selector(state)
@@ -30,7 +28,7 @@ const enhancer = (createStore) => {
   return (reducer, preloadedState) => {
     const store = createStore(reducer, preloadedState)
     let prevState
-    let curState
+    let curState = store.getState()
 
     store.subscribe(() => {
       prevState = curState

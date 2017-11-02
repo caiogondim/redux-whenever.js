@@ -156,10 +156,16 @@ describe('selector', () => {
     expect(wheneverCallbackSpy.callCount).toBe(1)
   })
 
-  it('should run selector if is a function', () => {
+  it('should run selector if it is a function', () => {
     const store = redux.createStore(reducer, reduxWhenever)
     const wheneverCallbackSpy = createSpy()
-    const selector = (state) => state.foo.bar
+    const selector = (state) => {
+      try {
+        return state.foo.bar
+      } catch (error) {
+        return undefined
+      }
+    }
 
     store.whenever(selector, true, wheneverCallbackSpy)
 

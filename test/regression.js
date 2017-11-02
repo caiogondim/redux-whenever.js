@@ -8,7 +8,12 @@ const reduxWhenever = require('../src')
 //
 
 const reducer = (state = {}, action) => {
-  return Object.assign({}, action.payload)
+  switch (action.type) {
+    case 'LOREM':
+      return Object.assign({}, action.payload)
+    default:
+      return state
+  }
 }
 
 //
@@ -134,5 +139,28 @@ describe('regression', () => {
 
     expect(callback1).toHaveBeenCalledTimes(2)
     expect(callback2).toHaveBeenCalledTimes(0)
+  })
+
+  it('should get prevState from initial state', () => {
+    const store = redux.createStore(
+      reducer,
+      {
+        foo: {
+          bar: 1
+        }
+      },
+      reduxWhenever
+    )
+
+    store.whenever('foo', () => true, (curState, prevState) => {
+      expect(prevState).toEqual({ bar: 1 })
+    })
+
+    store.dispatch({
+      type: 'LOREM',
+      payload: {
+        foo: { bar: 2 }
+      }
+    })
   })
 })
