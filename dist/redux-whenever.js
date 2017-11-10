@@ -1,9 +1,40 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.reduxWhenever = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+const quoteQuery = (query) => {
+  return query
+    .replace(/\[/g, '[\'')
+    .replace(/]/g, '\']')
+}
+
+const queryObj = (obj, query) => {
+  let prop
+  const quotedQuery = quoteQuery(query)
+
+  try {
+    if (query[0] === '[') {
+      prop = eval(`obj${quotedQuery}`) // eslint-disable-line no-eval
+    } else {
+      prop = eval(`obj.${query}`) // eslint-disable-line no-eval
+    }
+  } catch (error) {
+    prop = undefined
+  }
+
+  return prop
+}
+
+//
+// API
+//
+
+const safeChain = (obj, query) => queryObj(obj, query)
+
+module.exports = safeChain
+
+},{}],2:[function(require,module,exports){
 const safeChain = require('safe-chain')
 
 const getStateSubtree = (state, selector) => {
-  if (state === undefined) {
-    return undefined
-  } if (typeof selector === 'string') {
+  if (typeof selector === 'string') {
     return safeChain(state, selector)
   } else if (typeof selector === 'function') {
     return selector(state)
@@ -30,7 +61,7 @@ const enhancer = (createStore) => {
   return (reducer, preloadedState) => {
     const store = createStore(reducer, preloadedState)
     let prevState
-    let curState
+    let curState = store.getState()
 
     store.subscribe(() => {
       prevState = curState
@@ -88,3 +119,6 @@ const enhancer = (createStore) => {
 }
 
 module.exports = enhancer
+
+},{"safe-chain":1}]},{},[2])(2)
+});

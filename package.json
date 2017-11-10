@@ -11,7 +11,7 @@
     "test": "jest && npm run test:lint",
     "test:lint": "standard --fix 'src/**/*.js' 'test/**/*.js'",
     "preversion": "npm run test",
-    "build": "cp src/index.js dist/redux-whenever.js && minify src -d dist && mv dist/index.js dist/redux-whenever.min.js"
+    "build": "browserify src/index.js -s reduxWhenever -o dist/redux-whenever.js && minify src -d dist && mv dist/index.js dist/redux-whenever.min.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-minify": "0.2.0",
     "babel-preset-es2015": "^6.24.0",
+    "browserify": "^14.5.0",
     "jest": "^19.0.2",
     "redux": "^3.6.0",
     "standard": "^9.0.0"
