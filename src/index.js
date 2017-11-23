@@ -34,12 +34,13 @@ const enhancer = (createStore) => {
       prevState = curState
     })
 
-    const originalDispatch = store.dispatch
     const postponedActions = []
     let unsubscribePostprocess = null
     let recursionLevel = 0
 
     store.whenever = (selector, assertion, callback) => {
+      const originalDispatch = store.dispatch
+
       const unsubscribe = store.subscribe(() => {
         ++recursionLevel
 
