@@ -1,14 +1,20 @@
 <img src="https://cdn.rawgit.com/caiogondim/redux-whenever.js/master/img/banner.svg">
 
-<h1 align="center">redux-whenever.js</h1>
+# redux-whenever
 
-<div align="center">
+<div>
 <img src="http://travis-ci.org/caiogondim/redux-whenever.js.svg?branch=master" alt="Travis CI"> <img src="https://codecov.io/gh/caiogondim/redux-whenever.js/branch/master/graph/badge.svg" alt="Codecov"> <img src="http://img.badgesize.io/caiogondim/redux-whenever.js/master/dist/redux-whenever.min.js?compression=gzip"> <a href="https://www.npmjs.com/package/redux-whenever"><img src="https://img.shields.io/npm/v/redux-whenever.svg" /></a>
 </div>
 
 <br>
 
 Subscribe to a state subtree (or leaf) and run callbacks `whenever` it evaluates to a given value.
+
+## Installation
+
+```
+npm install --save redux-whenever
+```
 
 ## Usage
 
@@ -51,12 +57,6 @@ If a function, it will be executed. If not, it's equality will be compared again
 
 #### `callback`
 - type: `Function`
-
-## Installation
-
-```
-npm install --save redux-whenever
-```
 
 ## Credits
 - Icon by Scott Lewis from the Noun Project
